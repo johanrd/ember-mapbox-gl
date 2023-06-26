@@ -28,41 +28,13 @@ module('Integration | Component | mapbox gl on', function (hooks) {
       off() {},
     });
 
-    this.actions.onEvent = (ev) => {
+    this.onEvent = (ev) => {
       assert.strictEqual(ev, event, 'sends event to the action');
       done();
     };
 
     await render(
-      hbs`{{mapbox-gl-on eventSource=this.eventSource event='onzoom' action=(action 'onEvent')}}`
-    );
-  });
-
-  test('it works with positionalParams', async function (assert) {
-    assert.expect(3);
-    const done = assert.async();
-
-    const event = {};
-
-    this.set('eventSource', {
-      on(eventName, cb) {
-        assert.strictEqual(eventName, 'onzoom', 'subscribes to event name');
-
-        next(cb, event);
-      },
-
-      off(eventName) {
-        assert.strictEqual(eventName, 'onzoom', 'unsubscribes to event name');
-      },
-    });
-
-    this.actions.onEvent = (ev) => {
-      assert.strictEqual(ev, event, 'sends event to the action');
-      done();
-    };
-
-    await render(
-      hbs`{{mapbox-gl-on 'onzoom' (action 'onEvent') eventSource=this.eventSource}}`
+      hbs`<MapboxGlOn @event='onzoom' @action={{this.onEvent}} @eventSource={{this.eventSource}}/>`
     );
   });
 
@@ -86,13 +58,13 @@ module('Integration | Component | mapbox gl on', function (hooks) {
       },
     });
 
-    this.actions.onEvent = (ev) => {
+    this.onEvent = (ev) => {
       assert.strictEqual(ev, event, 'sends event to the action');
       done();
     };
 
     await render(
-      hbs`{{mapbox-gl-on 'onzoom' 'layer1' (action 'onEvent') eventSource=this.eventSource}}`
+      hbs`<MapboxGlOn @event='onzoom' @layerId='layer1' @action={{this.onEvent}} @eventSource={{this.eventSource}}/>`
     );
   });
 });

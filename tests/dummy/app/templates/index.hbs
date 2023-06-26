@@ -17,8 +17,8 @@
       </marker.popup>
     </map.marker>
 
-    {{map.call 'easeTo' (hash center=this.curLocation)}}
+    <map.call @func='easeTo' @positionalArguments={{array (hash center=this.curLocation)}}/>
   {{/if}}
 
-  {{map.on 'click' this.onClick}}
+  <map.on @event='click' @action={{this.onClick}}/>
 </MapboxGl>

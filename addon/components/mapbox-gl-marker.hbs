@@ -1,0 +1,9 @@
+{{did-update this.updateMarker @lngLat}}
+{{#in-element this.domContent}}
+  {{yield
+    (hash
+      popup=(component 'mapbox-gl-popup' marker=this.marker)
+      on=(component 'mapbox-gl-on' eventSource=this.marker)
+    )
+  }}
+{{/in-element}}

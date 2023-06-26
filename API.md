@@ -72,8 +72,9 @@ Component that creates a new [mapbox-gl-js instance](https://www.mapbox.com/mapb
 
 ### Example
 ```hbs
-{{#mapbox-gl initOptions=(hash ...propsHere) mapLoaded=(action 'mapLoaded') as |map|}}
-{{/mapbox-gl}}
+<MapboxGl @initOptions={{hash ...propsHere}} @mapLoaded={{action 'mapLoaded'}} as |map|>
+  <!-- You can place the content that utilizes the yielded map here -->
+</MapboxGl>
 ```
 
 ## map-source
@@ -89,24 +90,26 @@ Adds a data source to the map. The API matches the mapbox [source docs](https://
 
 ### Example
 ```hbs
-{{#mapbox-gl as |map|}}
-  {{#map.source options=(hash
-    type='geojson'
-    data=(hash
-      type='FeatureCollection'
-      features=(array
-        (hash
-          type='Feature'
-          geometry=(hash
-            type='Point'
-            coordinates=(array -96.7969879 32.7766642)
+<MapboxGl as |map|>
+  <map.source 
+    @options={{hash
+      type='geojson'
+      data=(hash
+        type='FeatureCollection'
+        features=(array
+          (hash
+            type='Feature'
+            geometry=(hash
+              type='Point'
+              coordinates=(array -96.7969879 32.7766642)
+            )
           )
         )
       )
-    ))}}
-  {{/map.source}}
-{{/mapbox-gl}}
+    }} />
+</MapboxGl>
 ```
+
 
 ## map-source-layer
 Adds a layer to the map. A map can have many layers. The API matches the mapbox [layer docs](https://www.mapbox.com/mapbox-gl-js/style-spec/#layers).
@@ -117,54 +120,54 @@ Adds a layer to the map. A map can have many layers. The API matches the mapbox 
 
 ### Example
 ```hbs
-{{#mapbox-gl as |map|}}
-  {{#map.source options=(hash
-    type='geojson'
-    data=(hash
-      type='FeatureCollection'
-      features=(array
-        (hash
-          type='Feature'
-          geometry=(hash
-            type='Point'
-            coordinates=(array -96.7969879 32.7766642)
+<MapboxGl as |map|>
+  <map.source 
+    @options={{hash
+      type='geojson'
+      data=(hash
+        type='FeatureCollection'
+        features=(array
+          (hash
+            type='Feature'
+            geometry=(hash
+              type='Point'
+              coordinates=(array -96.7969879 32.7766642)
+            )
           )
         )
       )
-    )) as |source|}}
-    {{source.layer layer=(hash
+    }} 
+  as |source|>
+    <source.layer 
+      @layer={{hash
         type='circle'
-        paint=(hash circle-color='#007cbf' circle-radius=10))}}
-  {{/map.source}}
-{{/mapbox-gl}}
+        paint=(hash circle-color='#007cbf' circle-radius=10)
+      }}
+    />
+  </map.source>
+</MapboxGl>
 ```
 
 # map-on
 Adds an action to listen for [mapbox events](https://www.mapbox.com/mapbox-gl-js/api/#map#on).
 
-### Positional Parameters
-- `eventSource`
-  - The first positional parameter. The event type to listen for.
-- `action`
-  - The second positional parameter. The action provided by the consumer to call when the event is triggered.
-
 ### Example
 ```hbs
-{{#mapbox-gl as |map|}}
-  {{map.on 'click' (action 'mapClicked')}}
-{{/mapbox-gl}}
+<MapboxGl as |map|>
+  <map.on @event='click' @action={{this.mapClicked}} />
+</MapboxGl>
 ```
 
 ```javascript
 import Controller from '@ember/controller';
+import { action } from '@ember/object';
 
-export default Controller.extend({
-  actions: {
-    mapClicked({ target: map, point }) {
-      console.log(map, point);
-    }
+export default class MapController extends Controller {
+  @action
+  mapClicked({ target: map, point }) {
+    console.log(map, point);
   }
-});
+}
 ```
 
 # map-popup
@@ -176,8 +179,8 @@ Adds a [popup](https://www.mapbox.com/mapbox-gl-js/api/#popup) to the map.
 
 ### Example
 ```hbs
-{{#mapbox-gl as |map|}}
-  {{#map.source options=(hash
+<MapboxGl as |map|>
+  <map.source @options={{hash
     type='geojson'
     data=(hash
       type='FeatureCollection'
@@ -190,16 +193,16 @@ Adds a [popup](https://www.mapbox.com/mapbox-gl-js/api/#popup) to the map.
           )
         )
       )
-    )) as |source|}}
-    {{source.layer layer=(hash
+    ) as |source|}}>
+    <source.layer @layer={{hash
         type='circle'
-        paint=(hash circle-color='#007cbf' circle-radius=10))}}
-  {{/map.source}}
+        paint=(hash circle-color='#007cbf' circle-radius=10)}} />
+  </map.source>
 
-  {{#map.popup lngLat=(array -96.7969879 32.7766642)}}
+  <map.popup @lngLat={{array -96.7969879 32.7766642}}>
     Dallas, TX
-  {{/map.popup}}
-{{/mapbox-gl}}
+  </map.popup>
+</MapboxGl>
 ```
 
 # map-image
@@ -207,9 +210,9 @@ Adds an image for use in the map, see [here](https://www.mapbox.com/mapbox-gl-js
 
 ### Properties
 - `name`
-  - The unique name for the image. The name will be referenced in a source layer as the `icon-image`. Reference [layers-symbol](https://www.mapbox.com/mapbox-gl-js/style-spec/#layers-symbol) for more details. Property can also be used as the first positional parameter.
-- `image`
-  - The path to your image, typically `/assets/<some_image>`. Property can also be used as the second positional parameter.
+  - The unique name for the image. The name will be referenced in a source layer as the `icon-image`. Reference [layers-symbol](https://www.mapbox.com/mapbox-gl-js/style-spec/#layers-symbol) for more details.
+- `url`
+  - The path to your image, typically `/assets/<some_image>`.
 - `width`
   - The width of the image in pixels.
 - `height`
@@ -217,25 +220,28 @@ Adds an image for use in the map, see [here](https://www.mapbox.com/mapbox-gl-js
 
 ### Example
 ```hbs
-{{#mapbox-gl as |map|}}
-  {{map.image 'cat' '/assets/cat.png' width=48 height=48}}
-  {{!-- `name` and `icon-image` used as positional params above --}}
+<MapboxGl as |map|>
+  <map.image @name='cat' @url='/assets/cat.png' @width=48 @height=48 />
 
-  {{#map.source options=(hash type='geojson' data=marker) as |source|}}
-    {{source.layer layer=(hash
+  <map.source @options={{hash type='geojson' data=this.marker}} as |source|>
+    <source.layer 
+      @layer={{hash
         type='symbol'
         layout=(hash
           icon-image='cat'
-          icon-size=0.25))}}
-  {{/map.source}}
-{{/mapbox-gl}}
+          icon-size=0.25
+        )
+      }}
+    />
+  </map.source>
+</MapboxGl>
 ```
 
 ```javascript
 import Controller from '@ember/controller';
 
-export default Controller.extend({
-  marker: {
+export default class MapController extends Controller {
+  marker = {
     type: 'FeatureCollection',
     features: [
       {
@@ -243,6 +249,6 @@ export default Controller.extend({
         geometry: { type: 'Point', coordinates: [ -96.7969879, 32.7766642 ] }
       }
     ]
-  }
-});
+  };
+}
 ```
