@@ -56,36 +56,38 @@ Add the following map options to `config/environment.js` to style the map, set a
 
 ```javascript
 import Controller from '@ember/controller';
+import { action } from '@ember/object';
 
-export default Controller.extend({
-  marker: {
+export default class MapController extends Controller {
+  marker = {
     type: 'FeatureCollection',
     features: [
       {
         type: 'Feature',
-        geometry: { type: 'Point', coordinates: [ -96.7969879, 32.7766642 ] }
+        geometry: { type: 'Point', coordinates: [-96.7969879, 32.7766642] }
       }
     ]
-  },
+  };
 
-  actions: {
-    mapClicked({ target: map, point }) {
-      console.log(map, point);
-    }
+  @action
+  mapClicked({ target: map, point }) {
+    console.log(map, point);
   }
-});
+}
 ```
 
 ```handlebars
-{{#mapbox-gl class='map-container' initOptions=(hash pitch=30) as |map|}}
-  {{map.on 'click' (action 'mapClicked')}}
+<MapboxGl @class='map-container' @initOptions={{hash pitch=30}} as |map|>
+  <map.on @event='click' @listener={{action 'mapClicked'}} />
 
-  {{#map.source options=(hash type='geojson' data=marker) as |source|}}
-    {{source.layer layer=(hash
-      type='circle'
-      paint=(hash circle-color='#007cbf' circle-radius=10))}}
-  {{/map.source}}
-{{/mapbox-gl}}
+  <map.source @options={{hash type='geojson' data=this.marker}} as |source|>
+    <source.layer
+      @layer={{hash
+        type='circle'
+        paint=(hash circle-color='#007cbf' circle-radius=10)}}
+    />
+  </map.source>
+</MapboxGl>
 ```
 
 The above example does the following:
