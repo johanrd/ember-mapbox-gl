@@ -1,6 +1,7 @@
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import MapboxGl from 'mapbox-gl';
+import mapboxglSupported from '@mapbox/mapbox-gl-supported';
 
 class MapboxLoaderCancelledError extends Error {}
 class MapboxSupportError extends Error {
@@ -67,13 +68,13 @@ export default class MapboxLoader {
       this._accessToken ||
       'pk.eyJ1Ijoia3R1cm5leSIsImEiOiJjajFudmQ2Z2owMDBiMnlyd3FtZDl2dDlkIn0.5uUKBumz-7IWM_2PQ6cXQw';
 
-    if (!this._mapLib.supported()) {
+    if (!mapboxglSupported.supported()) {
       throw new MapboxSupportError(
         'mapbox-gl not supported in current browser'
       );
     }
 
-    const map = (this.map = new MapboxGl.Map(this._mapOptions));
+    const map = (this.map = new this._mapLib.Map(this._mapOptions));
 
     return new Promise<void>((resolve, reject) => {
       const listeners = {
