@@ -45,7 +45,5 @@ module('Integration | Component | mapbox gl', function (hooks) {
     `);
 
     await waitFor('#loaded-sigil');
-
-    await pauseTest()
   });
 });
