@@ -1,4 +1,4 @@
-<div class={{@class}} {{did-insert this.registerElement}}>
+<div {{did-insert this.registerElement}} ...attributes>
   {{#if this._loader.isLoaded}}
     {{yield
       (hash

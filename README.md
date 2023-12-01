@@ -77,7 +77,7 @@ export default class MapController extends Controller {
 ```
 
 ```handlebars
-<MapboxGl @class='map-container' @initOptions={{hash pitch=30}} as |map|>
+<MapboxGl class='map-container' @initOptions={{hash pitch=30}} as |map|>
   <map.on @event='click' @listener={{action 'mapClicked'}} />
 
   <map.source @options={{hash type='geojson' data=this.marker}} as |source|>
