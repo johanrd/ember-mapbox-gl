@@ -53,7 +53,7 @@ export default class MapboxLoader {
   cancel() {
     this._isCancelled = true;
 
-    if (!this.map) {
+    if (this.map !== null) {
       // some map users may be late doing cleanup (seen with mapbox-draw-gl),
       // so don't remove the map until the next tick
       setTimeout(() => this.map?.remove(), 0);
