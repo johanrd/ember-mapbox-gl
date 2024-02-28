@@ -90,8 +90,8 @@ export default class MapboxGl extends Component<MapboxGlComponentSignature> {
     this._loader?.load(accessToken, options, this.args.mapLoaded, this._mapLib);
   }
 
-  @action
-  willDestroyElement() {
+  willDestroy() {
+    super.willDestroy();
     this._loader?.cancel();
   }
 }

@@ -1,14 +1,14 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { bind } from '@ember/runloop';
-import MapboxGl from 'mapbox-gl';
+import type { Map } from 'mapbox-gl';
 import { tracked } from '@glimmer/tracking';
 
 export interface MapboxGlImageComponentArgs {
-  map: MapboxGl.Map;
-  url: Parameters<MapboxGl.Map['loadImage']>['0'];
-  name: Parameters<MapboxGl.Map['addImage']>['0'];
-  options?: Parameters<MapboxGl.Map['addImage']>['2'];
+  map: Map;
+  url: Parameters<Map['loadImage']>['0'];
+  name: Parameters<Map['addImage']>['0'];
+  options?: Parameters<Map['addImage']>['2'];
   width?: HTMLImageElement['width'];
   height?: HTMLImageElement['height'];
   onLoad?: () => void;

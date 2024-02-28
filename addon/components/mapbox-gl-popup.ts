@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { getOwner } from '@ember/application';
-import MapboxGl, { Map, Marker, PopupOptions } from 'mapbox-gl';
+import { Map, Marker, PopupOptions, Popup } from 'mapbox-gl';
 import { MapboxGlOnComponentSignature } from './mapbox-gl-on';
 
 export interface MapboxGlPopupComponentArgs {
@@ -21,7 +21,7 @@ export interface MapboxGlPopupComponentSignature {
 }
 
 export default class MapboxGlPopupComponent extends Component<MapboxGlPopupComponentSignature> {
-  @tracked popup: MapboxGl.Popup | undefined | null;
+  @tracked popup: Popup | undefined | null;
   @tracked domContent: HTMLElement | undefined;
 
   // @service config;
@@ -40,7 +40,7 @@ export default class MapboxGlPopupComponent extends Component<MapboxGlPopupCompo
       ...popup,
       ...initOptions,
     };
-    this.popup = new MapboxGl.Popup(options).setDOMContent(this.domContent);
+    this.popup = new Popup(options).setDOMContent(this.domContent);
 
     if (marker === undefined) {
       this.popup.addTo(map);
@@ -72,6 +72,10 @@ export default class MapboxGlPopupComponent extends Component<MapboxGlPopupCompo
 
     if (marker) {
       marker.getPopup().remove();
+    }
+
+    if (this.popup) {
+      this.popup.remove();
     }
   }
 }

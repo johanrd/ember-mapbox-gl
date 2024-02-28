@@ -3,7 +3,7 @@ import { getOwner } from '@ember/application';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { assert } from '@ember/debug';
-import MapboxGl, { Map, MarkerOptions, LngLatLike, Marker } from 'mapbox-gl';
+import { Map, MarkerOptions, LngLatLike, Marker } from 'mapbox-gl';
 
 import { MapboxGlOnComponentSignature } from './mapbox-gl-on';
 import { MapboxGlPopupComponentSignature } from './mapbox-gl-popup';
@@ -55,7 +55,7 @@ export default class MapboxGlMarkerComponent extends Component<MapboxGlMarkerCom
 
   @action
   addMarker() {
-    this.marker = new MapboxGl.Marker(this.domContent, this.markerOptions)
+    this.marker = new Marker(this.domContent, this.markerOptions)
       .setLngLat(this.args.lngLat)
       .addTo(this.args.map);
   }
